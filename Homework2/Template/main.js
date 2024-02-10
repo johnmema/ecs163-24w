@@ -172,36 +172,7 @@ d3.csv("players.csv").then(rawData =>{
     .attr("width", x2.bandwidth)
     .attr("height", d => teamHeight - y2(d.count))
     .attr("fill", "grey")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+         
 }).catch(function(error){
     console.log(error);
 });
