@@ -1,37 +1,47 @@
 // JOHN MEMA  -   ECS 163 Homework 2
 
 const data = [
-    {service: "Spotify", hours: 3.84},
-    {service: "Apple Music", hours: 3.66},
-    {service: "YouTube Music", hours: 3.22},
-    {service: "Other streaming service", hours: 3.09},
-    {service: "Don't use a streaming service.", hours: 2.95},
-    {service: "Pandora", hours: 3.14}
-]
+  {service: "Spotify", hours: 3.84},
+  {service: "Apple Music", hours: 3.66},
+  {service: "YouTube Music", hours: 3.22},
+  {service: "Other streaming service", hours: 3.09},
+  {service: "Don't use a streaming service.", hours: 2.95},
+  {service: "Pandora", hours: 3.14}
+];
 
 // margins
 const margin = {top: 20, right: 20, bottom: 90, left: 70},
-    width = 600 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+  width = 600 - margin.left - margin.right,
+  height = 400 - margin.top - margin.bottom;
 
 const svg = d3.select("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  .attr("width", width + margin.left + margin.right)
+  .attr("height", height + margin.top + margin.bottom)
+.append("g")
+  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 // scales
 const xScale = d3.scaleBand()
-    .domain(data.map(d => d.service))
-    .range([0, width])
-    .padding(0.1);
+  .domain(data.map(d => d.service))
+  .range([0, width])
+  .padding(0.1);
 
 const yScale = d3.scaleLinear()
-    .domain([0, d3.max(data, d => d.hours+0.25)])
-    .range([height, 0]);
+  .domain([0, d3.max(data, d => d.hours+0.25)])
+  .range([height, 0]);
+
+// tooltip
+const tooltip = d3.select("body").append("div")
+  .attr("class", "tooltip")
+  .style("opacity", 0)
+  .style("position", "absolute")
+  .style("background-color", "white")
+  .style("border", "1px solid black")
+  .style("padding", "5px")
+  .style("border-radius", "5px");
 
 // create the bars
-svg.selectAll("rect")
+const bars = svg.selectAll("rect")
     .data(data)
     .enter().append("rect")
     .attr("x", d => xScale(d.service))
@@ -40,32 +50,48 @@ svg.selectAll("rect")
     .attr("height", d => height - yScale(d.hours))
     .attr("fill", "steelblue");
 
-svg.append("text")
-    .attr("transform", `translate(${width / 16}, ${height + margin.bottom / 2})`)
-    .style("text-anchor", "middle")
-    .style("font-size", "16px")
-    .style("font-weight", "bold") 
-    .text("Streaming Service");
+// tooltip interactions
+bars.on("mouseover", function(event, d) {
+    tooltip.transition()
+        .duration(200)
+        .style("opacity", .9);
+    tooltip.html(`Hours: ${d.service}`)
+        .style("left", (event.pageX + 10) + "px")
+        .style("top", (event.pageY - 28) + "px");
+})
+.on("mouseout", function() {
+    tooltip.transition()
+        .duration(500)
+        .style("opacity", 0);
+});
+
 
 svg.append("text")
-    .attr("transform", "rotate(-90)") 
-    .attr("y", 0 - margin.left) 
-    .attr("x", 0 - (height / 2)) 
-    .attr("dy", "1em") 
-    .style("text-anchor", "middle")
-    .style("font-size", "16px") 
-    .style("font-weight", "bold") 
-    .text("Hours Listened");
+  .attr("transform", `translate(${width / 16}, ${height + margin.bottom / 2})`)
+  .style("text-anchor", "middle")
+  .style("font-size", "16px")
+  .style("font-weight", "bold")
+  .text("Streaming Service");
+
+svg.append("text")
+  .attr("transform", "rotate(-90)")
+  .attr("y", 0 - margin.left)
+  .attr("x", 0 - (height / 2))
+  .attr("dy", "1em")
+  .style("text-anchor", "middle")
+  .style("font-size", "16px")
+  .style("font-weight", "bold")
+  .text("Hours Listened");
 
 svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(xScale))
+  .attr("transform", "translate(0," + height + ")")
+  .call(d3.axisBottom(xScale))
   .selectAll("text")
-    .attr("transform", "rotate(-45)")
-    .style("text-anchor", "end");
+  .attr("transform", "rotate(-45)")
+  .style("text-anchor", "end");
 
 svg.append("g")
-    .call(d3.axisLeft(yScale));
+  .call(d3.axisLeft(yScale));
 
 
     /// 2nd plot -- PIE CHART
@@ -218,7 +244,7 @@ streamSvg.append("text")
   legend.selectAll("text")
     .style("font-size", "12px") 
     .style("font-weight", "bold"); 
-    
+
 streamSvg.append("g")
     .attr("transform", `translate(0,${streamHeight})`)
     .call(d3.axisBottom(x).tickSizeOuter(0));
