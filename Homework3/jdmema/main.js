@@ -1,5 +1,6 @@
-// JOHN MEMA  -   ECS 163 Homework 2
+// JOHN MEMA  -   ECS 163 Homework 3
 
+// PLOT 1 - BAR CHART
 const data = [
   {service: "Spotify", hours: 3.84},
   {service: "Apple Music", hours: 3.66},
@@ -119,6 +120,8 @@ svg.append("text")
   .style("font-weight", "bold")
   .text("Hours Listened for each Streaming Service");
 
+// PLOT 2 - PIEEE
+
 const uniquePieData = [
   {service: "Spotify", hours: 19.30},
   {service: "Apple Music", hours: 18.39},
@@ -197,7 +200,7 @@ function drawPieChart() {
   const legend = uniquePieSvg.append("g")
     .attr("transform", `translate(${uniquePieWidth / 2 - 130}, ${-uniquePieHeight / 2 + 0})`);
 
-  // Legend background
+
   legend.append("rect")
     .attr("width", 240)
     .attr("height", processedPieData.length * 30 + 10)
